@@ -162,32 +162,4 @@ void USARTx_IRQHandler(void)
   HAL_UART_IRQHandler(&UartHandle);
 }
 
-/**
-  * @brief  This function handles external lines 15 to 10 interrupt request.
-  * @param  None
-  * @retval None
-  */
-void EXTI15_10_IRQHandler(void)
-{
-  HAL_GPIO_EXTI_IRQHandler(KEY_BUTTON_PIN);
-}
-
-/**
-  * @brief  This function handles PPP interrupt request.
-  * @param  None
-  * @retval None
-  */
-/*void PPP_IRQHandler(void)
-{
-}*/
-
-
-/**
-  * @}
-  */ 
-
-/**
-  * @}
-  */
-
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

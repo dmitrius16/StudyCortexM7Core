@@ -27,9 +27,34 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>Applications</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
 			<name>kernel</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>Applications/Console.cpp</name>
+			<type>1</type>
+			<locationURI>APP_PATH/Console.cpp</locationURI>
+		</link>
+		<link>
+			<name>Applications/Console.h</name>
+			<type>1</type>
+			<locationURI>APP_PATH/Console.h</locationURI>
+		</link>
+		<link>
+			<name>Applications/ParentProcess.cpp</name>
+			<type>1</type>
+			<locationURI>APP_PATH/ParentProcess.cpp</locationURI>
+		</link>
+		<link>
+			<name>Applications/ParentProcess.h</name>
+			<type>1</type>
+			<locationURI>APP_PATH/ParentProcess.h</locationURI>
 		</link>
 		<link>
 			<name>kernel/RTOS</name>
@@ -198,6 +223,10 @@
 		</link>
 	</linkedResources>
 	<variableList>
+		<variable>
+			<name>APP_PATH</name>
+			<value>$%7BPARENT-1-PROJECT_LOC%7D/Applications</value>
+		</variable>
 		<variable>
 			<name>RTOS_PATH</name>
 			<value>$%7BPARENT-1-PROJECT_LOC%7D/kernel/RTOS</value>

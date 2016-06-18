@@ -1,12 +1,8 @@
-#include "Application.h"
+#include "StdAfx.h"
 #include <stdio.h>
 #include <string.h>
 #include "Console.h"
 #include "..\Drivers\DriverUART.h"
-
-#ifndef TU8_APP
-#include "..\Applications\TUEngineApp\TUEngineHAL.h"
-#endif
 
 
 CConsole g_Console;
@@ -38,33 +34,18 @@ bool CConsole::OnInitProcess(void *param )
 	// hardware initialization console must be in other file
     
     //define hardware version TUEngine 
-#ifndef TU8_APP
-	USHORT hdwrVers = g_TUEngineHAL.GetHardwareImplVersion();
-	if(hdwrVers == 0)
-    {
+//	USHORT hdwrVers = g_TUEngineHAL.GetHardwareImplVersion();
+//	if(hdwrVers == 0)
+//    {
         if(!pDev->Init(USART1))
 			return false;
-    }
-    else if(hdwrVers == 1)
-    {
-        if(!pDev->Init(UART4))
-			return false;
-    }
-#else
-	//if(!pDev->Init(UART4))
-	int valParam = reinterpret_cast<int>(reinterpret_cast<int*>(param));
-	
-	if(valParam == 1)
-    {	
-		if(!pDev->Init(USART1))
-			return false;
-	}
-	else
-	{
-		if(!pDev->Init(UART4))
-			return false;
-	}
-#endif	
+//    }
+//    else if(hdwrVers == 1)
+//    {
+//        if(!pDev->Init(UART4))
+//			return false;
+//    }
+
 
 	m_pStream = pDev;
     

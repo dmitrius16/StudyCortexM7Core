@@ -1,4 +1,4 @@
-#include "Application.h"
+#include "StdAfx.h"
 #include "ParentProcess.h"
 
 void RunProcess(void const *argument)
