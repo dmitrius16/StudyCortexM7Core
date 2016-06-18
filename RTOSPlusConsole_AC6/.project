@@ -144,7 +144,7 @@
 		<link>
 			<name>kernel/STM32_HAL_DRIVER/Src/stm32f7xx_hal_iwdg.c</name>
 			<type>1</type>
-			<location>D:/ST/WorkSpaceAC6/CortexM7Projects/kernel/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_iwdg.c</location>
+			<locationURI>STM32_HAL_DRIVER/stm32f7xx_hal_iwdg.c</locationURI>
 		</link>
 		<link>
 			<name>kernel/STM32_HAL_DRIVER/Src/stm32f7xx_hal_pwr.c</name>
