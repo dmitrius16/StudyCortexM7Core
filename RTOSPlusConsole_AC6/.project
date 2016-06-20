@@ -32,6 +32,11 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>MyLib</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
 			<name>kernel</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -55,6 +60,51 @@
 			<name>Applications/ParentProcess.h</name>
 			<type>1</type>
 			<locationURI>APP_PATH/ParentProcess.h</locationURI>
+		</link>
+		<link>
+			<name>MyLib/CRC16.cpp</name>
+			<type>1</type>
+			<locationURI>MYLIB_PATH/CRC16.cpp</locationURI>
+		</link>
+		<link>
+			<name>MyLib/CRC16.h</name>
+			<type>1</type>
+			<locationURI>MYLIB_PATH/CRC16.h</locationURI>
+		</link>
+		<link>
+			<name>MyLib/CyclesTime.cpp</name>
+			<type>1</type>
+			<locationURI>MYLIB_PATH/CyclesTime.cpp</locationURI>
+		</link>
+		<link>
+			<name>MyLib/CyclesTimer.h</name>
+			<type>1</type>
+			<locationURI>MYLIB_PATH/CyclesTimer.h</locationURI>
+		</link>
+		<link>
+			<name>MyLib/MySync.cpp</name>
+			<type>1</type>
+			<locationURI>MYLIB_PATH/MySync.cpp</locationURI>
+		</link>
+		<link>
+			<name>MyLib/MySync.h</name>
+			<type>1</type>
+			<locationURI>MYLIB_PATH/MySync.h</locationURI>
+		</link>
+		<link>
+			<name>MyLib/StatisticsCalls.cpp</name>
+			<type>1</type>
+			<locationURI>MYLIB_PATH/StatisticsCalls.cpp</locationURI>
+		</link>
+		<link>
+			<name>MyLib/StatisticsCalls.h</name>
+			<type>1</type>
+			<locationURI>MYLIB_PATH/StatisticsCalls.h</locationURI>
+		</link>
+		<link>
+			<name>MyLib/define.h</name>
+			<type>1</type>
+			<locationURI>MYLIB_PATH/define.h</locationURI>
 		</link>
 		<link>
 			<name>kernel/RTOS</name>
@@ -226,6 +276,10 @@
 		<variable>
 			<name>APP_PATH</name>
 			<value>$%7BPARENT-1-PROJECT_LOC%7D/Applications</value>
+		</variable>
+		<variable>
+			<name>MYLIB_PATH</name>
+			<value>$%7BPARENT-1-PROJECT_LOC%7D/Mylib</value>
 		</variable>
 		<variable>
 			<name>RTOS_PATH</name>
