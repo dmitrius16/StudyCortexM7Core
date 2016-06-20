@@ -5,9 +5,6 @@
 
 class CDriverUART;
 
-
-
-
 class CDriverUART : public CBufferedStream
 {
     UINT m_TimeOut;

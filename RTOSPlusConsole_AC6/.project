@@ -107,6 +107,11 @@
 			<locationURI>MYLIB_PATH/define.h</locationURI>
 		</link>
 		<link>
+			<name>kernel/Drivers</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
 			<name>kernel/RTOS</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -115,6 +120,16 @@
 			<name>kernel/STM32_HAL_DRIVER</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>kernel/Drivers/DriverUART.h</name>
+			<type>1</type>
+			<locationURI>DRIVER_PATH/DriverUART.h</locationURI>
+		</link>
+		<link>
+			<name>kernel/Drivers/DriverUartCM7.cpp</name>
+			<type>1</type>
+			<locationURI>DRIVER_PATH/DriverUartCM7.cpp</locationURI>
 		</link>
 		<link>
 			<name>kernel/RTOS/CMSIS_RTOS</name>
@@ -257,6 +272,16 @@
 			<locationURI>STM32_HAL_DRIVER/stm32f7xx_hal_sdram.c</locationURI>
 		</link>
 		<link>
+			<name>kernel/STM32_HAL_DRIVER/Src/stm32f7xx_hal_tim.c</name>
+			<type>1</type>
+			<locationURI>STM32_HAL_DRIVER/stm32f7xx_hal_tim.c</locationURI>
+		</link>
+		<link>
+			<name>kernel/STM32_HAL_DRIVER/Src/stm32f7xx_hal_tim_ex.c</name>
+			<type>1</type>
+			<locationURI>STM32_HAL_DRIVER/stm32f7xx_hal_tim_ex.c</locationURI>
+		</link>
+		<link>
 			<name>kernel/STM32_HAL_DRIVER/Src/stm32f7xx_hal_uart.c</name>
 			<type>1</type>
 			<locationURI>STM32_HAL_DRIVER/stm32f7xx_hal_uart.c</locationURI>
@@ -276,6 +301,10 @@
 		<variable>
 			<name>APP_PATH</name>
 			<value>$%7BPARENT-1-PROJECT_LOC%7D/Applications</value>
+		</variable>
+		<variable>
+			<name>DRIVER_PATH</name>
+			<value>$%7BPARENT-1-PROJECT_LOC%7D/kernel/Drivers</value>
 		</variable>
 		<variable>
 			<name>MYLIB_PATH</name>

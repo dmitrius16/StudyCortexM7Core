@@ -1,5 +1,5 @@
-#include "Application.h"
-//#include "MySync.h"
+#include "StdAfx.h"
+////#include "MySync.h"
 #include <limits>
 
 os_semaphore_def semdefs[MAX_COUNT_SEMAPHORES]; // pool of semaphores

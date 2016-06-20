@@ -1,4 +1,4 @@
-#include "Application.h"
+#include "StdAfx.h"
 #include "DriverUART.h"
 
 const int IndUARTDesc_1 = 0;
@@ -87,8 +87,13 @@ void UART4_IRQHandler(void)
 
 }
 
+///~~~ this empty function
+void UART_IRQHandler(UART_HandleTypeDef *huart)
+{
 
+}
 
+/*
 void UART_IRQHandler(UART_HandleTypeDef *huart)
 {  
 	uint32_t tmp1 = 0, tmp2 = 0, tmp3 = 0;
@@ -96,10 +101,10 @@ void UART_IRQHandler(UART_HandleTypeDef *huart)
 	tmp2 = __HAL_UART_GET_IT_SOURCE(huart, UART_IT_PE);  
 	BYTE errorCode = HAL_UART_ERROR_NONE;
 	
-	/* UART parity error interrupt occurred ------------------------------------*/
+	// UART parity error interrupt occurred
 	if((tmp1 != RESET) && (tmp2 != RESET))
 	{ 
-			// clear PEFlag
+		// clear PEFlag
 		
 		// __HAL_UART_CLEAR_PEFLAG(huart);  
 		while(__HAL_UART_GET_FLAG(huart, UART_FLAG_RXNE) == RESET)
@@ -113,7 +118,7 @@ void UART_IRQHandler(UART_HandleTypeDef *huart)
 	
 	tmp1 = __HAL_UART_GET_FLAG(huart, UART_FLAG_FE);
 	tmp2 = __HAL_UART_GET_IT_SOURCE(huart, UART_IT_ERR);
-	/* UART frame error interrupt occurred -------------------------------------*/
+	// UART frame error interrupt occurred
 	if((tmp1 != RESET) && (tmp2 != RESET))
 	{ 
 		//__HAL_UART_CLEAR_FEFLAG(huart);
@@ -125,7 +130,7 @@ void UART_IRQHandler(UART_HandleTypeDef *huart)
 	
 	tmp1 = __HAL_UART_GET_FLAG(huart, UART_FLAG_NE);
 	tmp2 = __HAL_UART_GET_IT_SOURCE(huart, UART_IT_ERR);
-	/* UART noise error interrupt occurred -------------------------------------*/
+	// UART noise error interrupt occurred
 	if((tmp1 != RESET) && (tmp2 != RESET))
 	{ 
 		//__HAL_UART_CLEAR_NEFLAG(huart);
@@ -137,7 +142,7 @@ void UART_IRQHandler(UART_HandleTypeDef *huart)
 	
 	tmp1 = __HAL_UART_GET_FLAG(huart, UART_FLAG_ORE);
 	tmp2 = __HAL_UART_GET_IT_SOURCE(huart, UART_IT_ERR);
-	/* UART Over-Run interrupt occurred ----------------------------------------*/
+	// UART Over-Run interrupt occurred
 	if((tmp1 != RESET) && (tmp2 != RESET))
 	{ 
 		volatile uint32_t tmp = huart->Instance->SR;  
@@ -150,7 +155,7 @@ void UART_IRQHandler(UART_HandleTypeDef *huart)
 	
 	tmp1 = __HAL_UART_GET_FLAG(huart, UART_FLAG_RXNE);
 	tmp2 = __HAL_UART_GET_IT_SOURCE(huart, UART_IT_RXNE);
-	/* UART in mode Receiver ---------------------------------------------------*/
+	// UART in mode Receiver
 	if((tmp1 != RESET) && (tmp2 != RESET))
 	{ 
 		UART_RX_ISR(huart);
@@ -161,7 +166,7 @@ void UART_IRQHandler(UART_HandleTypeDef *huart)
 	
 	tmp3 = (huart->Instance->SR & UART_FLAG_TC) ? SET : RESET;
 	
-	/* UART in mode Transmitter ------------------------------------------------*/
+	// UART in mode Transmitter
 	if((tmp1 != RESET) && (tmp2 != RESET))
 	{
 		UART_TX_ISR(huart);
@@ -173,13 +178,13 @@ void UART_IRQHandler(UART_HandleTypeDef *huart)
 	
 	if(errorCode != HAL_UART_ERROR_NONE)
 	{
-		/* Set the UART state ready to be able to start again the process */
+		// Set the UART state ready to be able to start again the process
 	
 		///	huart->State = HAL_UART_STATE_READY; commented by Sysoev
 	
 		HAL_UART_ErrorCallback(huart);
 	}
-}
+}*/
 
 void UART_RX_ISR(UART_HandleTypeDef *huart)
 {
@@ -187,7 +192,8 @@ void UART_RX_ISR(UART_HandleTypeDef *huart)
     tmp1 = huart->State; 
     if((tmp1 == HAL_UART_STATE_BUSY_RX) || (tmp1 == HAL_UART_STATE_BUSY_TX_RX))
     {
-        BYTE rxValue = (huart->Instance->DR & (uint8_t)0x00FF);
+        ///~~~ BYTE rxValue = (huart->Instance->DR & (uint8_t)0x00FF);
+    	BYTE rxValue = 0;	///~~~ clear this string
         BYTE indDesc = FindUartDescFromHandle(huart);
         uartDesc[indDesc].pFifoBuf->PushElem(rxValue);
     }
@@ -201,7 +207,7 @@ void UART_TX_ISR(UART_HandleTypeDef *huart)
     if((tmp1 == HAL_UART_STATE_BUSY_TX) || (tmp1 == HAL_UART_STATE_BUSY_TX_RX))
     {
     
-        huart->Instance->DR = (uint8_t)(*huart->pTxBuffPtr++ & (uint8_t)0x00FF);
+    ///~~~    huart->Instance->DR = (uint8_t)(*huart->pTxBuffPtr++ & (uint8_t)0x00FF);
         
         if(--huart->TxXferCount == 0)
         {
@@ -462,11 +468,9 @@ BYTE CDriverUART::WriteBytes(BYTE *txBuffer,int len)
     if(!uartDesc[m_HandlInd].m_SmphrTx.WaitSemaphoreMs(1000))
 		__NOP();
 
-	   
-	while(!(uartDesc[m_HandlInd].uartHandle.Instance->SR & USART_SR_TC))
-	{	
-           osDelay(1);
-    }
+	///~~~
+	///~~~while(!(uartDesc[m_HandlInd].uartHandle.Instance->SR & USART_SR_TC))
+	///~~~{ osDelay(1);  }
 	
 #if defined(TU8_APP)	
 	Turn485Rx();

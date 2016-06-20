@@ -1,4 +1,4 @@
-#include "Application.h"
+#include "StdAfx.h"
 #include "StatisticsCalls.h"
 #include "..\Applications\Console.h"
 #include <string.h>

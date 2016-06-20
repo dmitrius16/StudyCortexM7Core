@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "Console.h"
-#include "..\Drivers\DriverUART.h"
+#include "..\kernel\Drivers\DriverUART.h"
 
 
 CConsole g_Console;

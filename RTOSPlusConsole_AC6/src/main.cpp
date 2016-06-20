@@ -185,22 +185,6 @@ void SystemClock_Config(void)
 }
 
 
-
-/**
-  * @brief  UART error callbacks
-  * @param  UartHandle: UART handle
-  * @note   This example shows a simple way to report transfer error, and you can
-  *         add your own implementation.
-  * @retval None
-  */
-void HAL_UART_ErrorCallback(UART_HandleTypeDef *UartHandle)
-{
-    Error_Handler();
-}
-
-
-
-
 /**
   * @brief  This function is executed in case of error occurrence.
   * @param  None

@@ -1,6 +1,6 @@
 #pragma once
 #include <stdarg.h>
-#include "..\Drivers\Stream.h"
+#include "..\kernel\Drivers\Stream.h"
 
 
 void my_printf(const char* format, ...);

@@ -1,4 +1,4 @@
-#include "Application.h"
+#include "StdAfx.h"
 #include "DriverUART.h"
 
 const int IndUARTDesc_1 = 0;
