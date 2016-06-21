@@ -55,7 +55,6 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /* UART handler declared in "main.c" file */
-extern UART_HandleTypeDef UartHandle;
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -133,6 +132,7 @@ void UsageFault_Handler(void)
 void DebugMon_Handler(void)
 {
 }
+
 /**
   * @brief  This function handles SysTick Handler.
   * @param  None
@@ -144,22 +144,3 @@ void SysTick_Handler(void)
 	HAL_IncTick();
 }
 
-/******************************************************************************/
-/*                 STM32F7xx Peripherals Interrupt Handlers                   */
-/*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */
-/*  available peripheral interrupt handler's name please refer to the startup */
-/*  file (startup_stm32f7xx.s).                                               */
-/******************************************************************************/
-/**
-  * @brief  This function handles UART interrupt request.  
-  * @param  None
-  * @retval None
-  * @Note   This function is redefined in "main.h" and related to DMA  
-  *         used for USART data transmission     
-  */
-void USARTx_IRQHandler(void)
-{
-  HAL_UART_IRQHandler(&UartHandle);
-}
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -299,7 +299,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *UartHandle)
 //think about initialization
 bool CDriverUART::Init(USART_TypeDef *pUsart)
 {
-	return Init(pUsart, 115200, UART_WORDLENGTH_8B, UART_STOPBITS_1, UART_PARITY_NONE);//57600
+	return Init(pUsart, 115200, UART_WORDLENGTH_8B, UART_STOPBITS_1, UART_PARITY_NONE);
 }
 
 bool CDriverUART::Init(USART_TypeDef *pUsart, UINT BaudRate, UINT WordLength, UINT StopBits, UINT Parity)

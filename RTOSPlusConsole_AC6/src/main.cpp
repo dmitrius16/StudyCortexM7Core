@@ -42,11 +42,6 @@
 #include "main.h"
 #include "cmsis_os.h"
 #include "ProcessManager.h"
-/* Private macro -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
-/* UART handler declaration */
-UART_HandleTypeDef UartHandle;
-
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
@@ -82,44 +77,20 @@ int main(void)
 
   /* Configure the system clock to 216 MHz */
   SystemClock_Config();
-  
-  /*##-1- Configure the UART peripheral ######################################*/
-  /* Put the USART peripheral in the Asynchronous mode (UART Mode) */
-  /* UART configured as follows:
-      - Word Length = 8 Bits
-      - Stop Bit = One Stop bit
-      - Parity = None
-      - BaudRate = 9600 baud
-      - Hardware flow control disabled (RTS and CTS signals) */
-  UartHandle.Instance        = USARTx;
 
-  UartHandle.Init.BaudRate   = 9600;
-  UartHandle.Init.WordLength = UART_WORDLENGTH_8B;
-  UartHandle.Init.StopBits   = UART_STOPBITS_1;
-  UartHandle.Init.Parity     = UART_PARITY_NONE;
-  UartHandle.Init.HwFlowCtl  = UART_HWCONTROL_NONE;
-  UartHandle.Init.Mode       = UART_MODE_TX_RX;
-  UartHandle.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT; 
-
-  if(HAL_UART_DeInit(&UartHandle) != HAL_OK)
-  {
-    Error_Handler();
-  }  
-  if(HAL_UART_Init(&UartHandle) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  RunProcessManager(0);
+  osThreadDef(WDT, RunProcessManager, osPriorityRealtime, 0, configMINIMAL_STACK_SIZE);
+  osThreadCreate(osThread(WDT),(void*)NULL);
 
   osKernelStart();
 
   while(1)
   {
-
+	  __NOP();
   }
   
 }
+
+
 
 /**
   * @brief  System Clock Configuration
@@ -194,7 +165,7 @@ static void Error_Handler(void)
 {
   while(1)
   {
-    HAL_Delay(1000); 
+	  HAL_Delay(1000);
   }  
 }
 
