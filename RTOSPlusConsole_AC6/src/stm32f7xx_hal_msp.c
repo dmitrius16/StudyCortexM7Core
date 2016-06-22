@@ -70,6 +70,9 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 {  
   GPIO_InitTypeDef  GPIO_InitStruct;
   
+
+
+
   /*##-1- Enable peripherals and GPIO Clocks #################################*/
   /* Enable GPIO TX/RX clock */
   USARTx_TX_GPIO_CLK_ENABLE();

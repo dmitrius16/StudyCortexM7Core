@@ -14,47 +14,32 @@
 
 //#define USARTx                           UART4
 
-#define USART4_CLK_ENABLE()              __UART4_CLK_ENABLE()
-#define USART4_RX_GPIO_CLK_ENABLE()      __GPIOC_CLK_ENABLE()
-#define USART4_TX_GPIO_CLK_ENABLE()      __GPIOC_CLK_ENABLE()
+#define USART1_CLK_ENABLE()              __UART1_CLK_ENABLE()
+#define USART1_RX_GPIO_CLK_ENABLE()      __GPIOB_CLK_ENABLE()
+#define USART1_TX_GPIO_CLK_ENABLE()      __GPIOA_CLK_ENABLE()
 
-#define USART4_FORCE_RESET()             __UART4_FORCE_RESET()
-#define USART4_RELEASE_RESET()           __UART4_RELEASE_RESET()
+#define USART1_FORCE_RESET()             __UART1_FORCE_RESET()
+#define USART1_RELEASE_RESET()           __UART1_RELEASE_RESET()
 
 /* Definition for USARTx Pins */
-#define USART4_TX_PIN                    GPIO_PIN_10
-#define USART4_TX_GPIO_PORT              GPIOC  
-#define USART4_TX_AF                     GPIO_AF8_UART4
-#define USART4_RX_PIN                    GPIO_PIN_11
-#define USART4_RX_GPIO_PORT              GPIOC 
-#define USART4_RX_AF                     GPIO_AF8_UART4
+#define USART1_TX_PIN                    GPIO_PIN_9
+#define USART1_TX_GPIO_PORT              GPIOA
+#define USART1_TX_AF                     GPIO_AF7_USART1
+#define USART1_RX_PIN                    GPIO_PIN_11
+#define USART1_RX_GPIO_PORT              GPIOC
+#define USART1_RX_AF                     GPIO_AF7_USART1
+
 
 /* Definition for USARTx's NVIC */
 //#define USART4_IRQn                      UART4_IRQn
 //#define USART4_IRQHandler                UART4_IRQHandler
 //#elif defined (USE_USART1_CONSOLE)
 
-//#define USARTx                           USART1
-#define USART1_CLK_ENABLE()              __USART1_CLK_ENABLE()
-#define USART1_RX_GPIO_CLK_ENABLE()      __GPIOA_CLK_ENABLE()
-#define USART1_TX_GPIO_CLK_ENABLE()      __GPIOA_CLK_ENABLE() 
 
-#define USART1_FORCE_RESET()             __USART1_FORCE_RESET()
-#define USART1_RELEASE_RESET()           __USART1_RELEASE_RESET()
+#define USARTx_CLK_ENABLE(UART_HANDLE)  UART_HANDLE ## _CLK_ENABLE()
+#define USARTx_RX_GPIO_CLK_ENABLE(UART_HANDLE)  UART_HANDLE ## _RX_GPIO_CLK_ENABLE()
 
-/* Definition for USARTx Pins */
-#define USART1_TX_PIN                    GPIO_PIN_9
-#define USART1_TX_GPIO_PORT              GPIOA  
-#define USART1_TX_AF                     GPIO_AF7_USART1
-#define USART1_RX_PIN                    GPIO_PIN_10
-#define USART1_RX_GPIO_PORT              GPIOA 
-#define USART1_RX_AF                     GPIO_AF7_USART1
 
-/* Definition for USARTx's NVIC */
-//#define USARTx_IRQn                      USART1_IRQn
-//#define USARTx_IRQHandler                USART1_IRQHandler
-
-///#endif
 
 // ################# End UART peripherial description ####################
 
