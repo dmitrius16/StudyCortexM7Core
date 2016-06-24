@@ -45,14 +45,13 @@
 
 
 #include "version.h"
-
-#ifdef __cplusplus
-
 //header describe hardware that used in project
 #include "HardwareDef.h"
 
 // include types used in project
 #include "..\MyLib\define.h"
+
+#ifdef __cplusplus
 
 // Lib
 #include "..\MyLib\CRC16.h"

@@ -18,7 +18,7 @@ CConsole g_Console;
 const char* CConsole::pLongInput = "\r\nInput very long";
 
 
-CConsole::CConsole() : m_bInit(false),m_bMakeRepeatCalls(false),m_bMakeClearDisplay(false),m_CmdEmptyInd(0),m_CurCmdInd(-1),m_CurParamInd(0),
+CConsole::CConsole() : m_bInit(false), m_bMakeRepeatCalls(false), m_bMakeClearDisplay(false), m_CmdEmptyInd(0), m_CurCmdInd(-1), m_CurParamInd(0),
 					   m_RepetCallCnt(0)
 {
 
@@ -30,25 +30,20 @@ bool CConsole::OnInitProcess(void *param )
     m_ConsLock.Create();
     CDriverUART *pDev = new CDriverUART();
 	
-    
 	// hardware initialization console must be in other file
-    
     //define hardware version TUEngine 
-//	USHORT hdwrVers = g_TUEngineHAL.GetHardwareImplVersion();
-//	if(hdwrVers == 0)
-//    {
+    //	USHORT hdwrVers = g_TUEngineHAL.GetHardwareImplVersion();
+    //	if(hdwrVers == 0)
+    //    {
         if(!pDev->Init(USART1))
 			return false;
-//    }
-//    else if(hdwrVers == 1)
-//    {
-//        if(!pDev->Init(UART4))
-//			return false;
-//    }
-
-
+        //    }
+        //    else if(hdwrVers == 1)
+        //    {
+        //        if(!pDev->Init(UART4))
+        //			return false;
+        //    }
 	m_pStream = pDev;
-    
 	m_bInit = true;
     return true;
 }
@@ -67,6 +62,7 @@ void CConsole::OnTimer()
    
    m_pStream->SetTimeOut(1);
    m_pStream->Open();
+
 	while(1)
 	{
 		osDelay(1);
@@ -225,13 +221,15 @@ void CConsole::Command(int argc,char* argv[])
 	{
 		my_printf("System CPU: ARM CortexM4\r\n");
 		my_printf("Project: TUEngine\r\n");
-	}*/
-	//
+	}
+	*/
+
 	for(int i = 0; i < m_CmdEmptyInd;i++)
 	{
 		my_printf("%s\r\n",m_ConsoleCmdBuf[i].cmdName);
 	}
-	
+
+
 }
 	
 
@@ -261,3 +259,4 @@ void clear_screen()
 		g_Console.m_pStream->Write(0xC);
 	}
 }
+

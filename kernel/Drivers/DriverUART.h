@@ -1,7 +1,7 @@
 #pragma once
 #include "Stream.h"
 
-#define NUM_USED_UARTS 2
+#define NUM_USED_UARTS 1
 
 class CDriverUART;
 

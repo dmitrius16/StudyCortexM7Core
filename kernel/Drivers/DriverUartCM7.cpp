@@ -65,126 +65,87 @@ typedef struct
 
 UART_DRIVER_DESCRIPTOR uartDesc[NUM_USED_UARTS];
 
-void UART_IRQHandler(UART_HandleTypeDef *huart);
 int FindUartDescFromHandle(UART_HandleTypeDef *UartHandle);
-void UART_RX_ISR(UART_HandleTypeDef *huart);
-void UART_TX_ISR(UART_HandleTypeDef *huart);
+static void UART_IRQHandler(UART_HandleTypeDef *huart);
+static void UART_RX_ISR(UART_HandleTypeDef *huart);
+static void UART_TX_ISR(UART_HandleTypeDef *huart);
 
 
 extern "C"{
 
 void USART1_IRQHandler(void)
 {
-    UART_IRQHandler(&uartDesc[IndUARTDesc_1].uartHandle);
-    
-    
+    //UART_IRQHandler(&uartDesc[IndUARTDesc_1].uartHandle);
+	UART_IRQHandler(&uartDesc[IndUARTDesc_1].uartHandle);
+}
 }
 
-void UART4_IRQHandler(void)
-{
-    UART_IRQHandler(&uartDesc[IndUARTDesc_4].uartHandle);
-}
-
-}
-
-///~~~ this empty function
 void UART_IRQHandler(UART_HandleTypeDef *huart)
 {
+	  /* UART parity error interrupt occurred -------------------------------------*/
+	  if((__HAL_UART_GET_IT(huart, UART_IT_PE) != RESET) && (__HAL_UART_GET_IT_SOURCE(huart, UART_IT_PE) != RESET))
+	  {
+			__HAL_UART_CLEAR_PEFLAG(huart);
 
+			huart->ErrorCode |= HAL_UART_ERROR_PE;
+			huart->State = HAL_UART_STATE_READY;
+	  }
+
+	  /* UART frame error interrupt occurred --------------------------------------*/
+	  if((__HAL_UART_GET_IT(huart, UART_IT_FE) != RESET) && (__HAL_UART_GET_IT_SOURCE(huart, UART_IT_ERR) != RESET))
+	  {
+		  __HAL_UART_CLEAR_FEFLAG(huart);
+
+		  huart->ErrorCode |= HAL_UART_ERROR_FE;
+		  huart->State = HAL_UART_STATE_READY;
+	  }
+
+	  /* UART noise error interrupt occurred --------------------------------------*/
+	  if((__HAL_UART_GET_IT(huart, UART_IT_NE) != RESET) && (__HAL_UART_GET_IT_SOURCE(huart, UART_IT_ERR) != RESET))
+	  {
+		  __HAL_UART_CLEAR_NEFLAG(huart);
+
+		  huart->ErrorCode |= HAL_UART_ERROR_NE;
+		  huart->State = HAL_UART_STATE_READY;
+	  }
+
+	  /* UART Over-Run interrupt occurred -----------------------------------------*/
+	  if((__HAL_UART_GET_IT(huart, UART_IT_ORE) != RESET) && (__HAL_UART_GET_IT_SOURCE(huart, UART_IT_ERR) != RESET))
+	  {
+		  __HAL_UART_CLEAR_OREFLAG(huart);
+
+		  huart->ErrorCode |= HAL_UART_ERROR_ORE;
+		  huart->State = HAL_UART_STATE_READY;
+	  }
+
+	   /* Call UART Error Call back function if need be --------------------------*/
+	  if(huart->ErrorCode != HAL_UART_ERROR_NONE)
+	  {
+		  HAL_UART_ErrorCallback(huart);
+	  }
+
+	  /* UART in mode Receiver ---------------------------------------------------*/
+	  if((__HAL_UART_GET_IT(huart, UART_IT_RXNE) != RESET) && (__HAL_UART_GET_IT_SOURCE(huart, UART_IT_RXNE) != RESET))
+	  {
+		  UART_RX_ISR(huart);
+		// Clear RXNE interrupt flag
+		//__HAL_UART_SEND_REQ(huart, UART_RXDATA_FLUSH_REQUEST);	///~~~ clear it ????
+	  }
+
+
+	  // UART in mode Transmitter
+	 if((__HAL_UART_GET_IT(huart, UART_IT_TXE) != RESET) &&(__HAL_UART_GET_IT_SOURCE(huart, UART_IT_TXE) != RESET))
+	 {
+		 UART_TX_ISR(huart);
+	 }
+
+	  // UART in mode Transmitter (transmission end) end transmission interrupt
+	 if((__HAL_UART_GET_IT(huart, UART_IT_TC) != RESET) &&(__HAL_UART_GET_IT_SOURCE(huart, UART_IT_TC) != RESET))
+	 {
+		 __HAL_UART_CLEAR_IT(huart,USART_ICR_TCCF);
+	 }
 }
 
-/*
-void UART_IRQHandler(UART_HandleTypeDef *huart)
-{  
-	uint32_t tmp1 = 0, tmp2 = 0, tmp3 = 0;
-	tmp1 = __HAL_UART_GET_FLAG(huart, UART_FLAG_PE);
-	tmp2 = __HAL_UART_GET_IT_SOURCE(huart, UART_IT_PE);  
-	BYTE errorCode = HAL_UART_ERROR_NONE;
-	
-	// UART parity error interrupt occurred
-	if((tmp1 != RESET) && (tmp2 != RESET))
-	{ 
-		// clear PEFlag
-		
-		// __HAL_UART_CLEAR_PEFLAG(huart);  
-		while(__HAL_UART_GET_FLAG(huart, UART_FLAG_RXNE) == RESET)
-		{  
-			__NOP();
-		}
-		volatile uint32_t tmp = huart->Instance->SR;
-		tmp =  huart->Instance->DR;
-		errorCode |= HAL_UART_ERROR_PE;
-	}
-	
-	tmp1 = __HAL_UART_GET_FLAG(huart, UART_FLAG_FE);
-	tmp2 = __HAL_UART_GET_IT_SOURCE(huart, UART_IT_ERR);
-	// UART frame error interrupt occurred
-	if((tmp1 != RESET) && (tmp2 != RESET))
-	{ 
-		//__HAL_UART_CLEAR_FEFLAG(huart);
-		
-		volatile uint32_t tmp = huart->Instance->SR;  
-		tmp =  huart->Instance->DR;
-		errorCode |= HAL_UART_ERROR_FE;
-	}
-	
-	tmp1 = __HAL_UART_GET_FLAG(huart, UART_FLAG_NE);
-	tmp2 = __HAL_UART_GET_IT_SOURCE(huart, UART_IT_ERR);
-	// UART noise error interrupt occurred
-	if((tmp1 != RESET) && (tmp2 != RESET))
-	{ 
-		//__HAL_UART_CLEAR_NEFLAG(huart);
-		volatile uint32_t tmp = huart->Instance->SR;  
-		tmp =  huart->Instance->DR;
-		
-		errorCode |= HAL_UART_ERROR_NE;
-	}
-	
-	tmp1 = __HAL_UART_GET_FLAG(huart, UART_FLAG_ORE);
-	tmp2 = __HAL_UART_GET_IT_SOURCE(huart, UART_IT_ERR);
-	// UART Over-Run interrupt occurred
-	if((tmp1 != RESET) && (tmp2 != RESET))
-	{ 
-		volatile uint32_t tmp = huart->Instance->SR;  
-		tmp =  huart->Instance->DR;
-		
-		//  __HAL_UART_CLEAR_OREFLAG(huart);
-		
-		errorCode |= HAL_UART_ERROR_ORE;
-	}
-	
-	tmp1 = __HAL_UART_GET_FLAG(huart, UART_FLAG_RXNE);
-	tmp2 = __HAL_UART_GET_IT_SOURCE(huart, UART_IT_RXNE);
-	// UART in mode Receiver
-	if((tmp1 != RESET) && (tmp2 != RESET))
-	{ 
-		UART_RX_ISR(huart);
-	}
-	
-	tmp1 = __HAL_UART_GET_FLAG(huart, UART_FLAG_TXE);
-	tmp2 = __HAL_UART_GET_IT_SOURCE(huart, UART_IT_TXE);
-	
-	tmp3 = (huart->Instance->SR & UART_FLAG_TC) ? SET : RESET;
-	
-	// UART in mode Transmitter
-	if((tmp1 != RESET) && (tmp2 != RESET))
-	{
-		UART_TX_ISR(huart);
-	}
-	else if(tmp3 == SET)
-	{
-		huart->Instance->SR &= ~(UART_FLAG_TC);
-	}
-	
-	if(errorCode != HAL_UART_ERROR_NONE)
-	{
-		// Set the UART state ready to be able to start again the process
-	
-		///	huart->State = HAL_UART_STATE_READY; commented by Sysoev
-	
-		HAL_UART_ErrorCallback(huart);
-	}
-}*/
 
 void UART_RX_ISR(UART_HandleTypeDef *huart)
 {
@@ -192,49 +153,41 @@ void UART_RX_ISR(UART_HandleTypeDef *huart)
     tmp1 = huart->State; 
     if((tmp1 == HAL_UART_STATE_BUSY_RX) || (tmp1 == HAL_UART_STATE_BUSY_TX_RX))
     {
-        ///~~~ BYTE rxValue = (huart->Instance->DR & (uint8_t)0x00FF);
-    	BYTE rxValue = 0;	///~~~ clear this string
-        BYTE indDesc = FindUartDescFromHandle(huart);
+    	uint8_t rxValue =  (uint8_t)(huart->Instance->RDR & (uint8_t)0x00FF);
+    	BYTE indDesc = FindUartDescFromHandle(huart);
         uartDesc[indDesc].pFifoBuf->PushElem(rxValue);
     }
 }
 
+
 void UART_TX_ISR(UART_HandleTypeDef *huart)
 {
-    uint32_t tmp1 = 0;
-    
-    tmp1 = huart->State;
-    if((tmp1 == HAL_UART_STATE_BUSY_TX) || (tmp1 == HAL_UART_STATE_BUSY_TX_RX))
-    {
-    
-    ///~~~    huart->Instance->DR = (uint8_t)(*huart->pTxBuffPtr++ & (uint8_t)0x00FF);
-        
-        if(--huart->TxXferCount == 0)
-        {
-            __HAL_UART_DISABLE_IT(huart, UART_IT_TXE);
-        
-            if(huart->State == HAL_UART_STATE_BUSY_TX_RX) 
-            {
-                huart->State = HAL_UART_STATE_BUSY_RX;
-            }
-            else
-            {
-                __HAL_UART_DISABLE_IT(huart,UART_IT_PE);
-                __HAL_UART_DISABLE_IT(huart,UART_IT_ERR);
-                 huart->State = HAL_UART_STATE_READY;
-            }
-            
-			/* Wait on TC flag to be able to start a second transfer */
-            //if(UART_WaitOnFlagUntilTimeout(huart, UART_FLAG_TC, RESET, UART_TIMEOUT_VALUE) != HAL_OK)
-            //{ 
-            //  return HAL_TIMEOUT;
-            //}
-            
-            
-            //make wait until TC set
-            HAL_UART_TxCpltCallback(huart);
-        }
-    }
+	uint16_t* tmp;
+
+	if ((huart->State == HAL_UART_STATE_BUSY_TX) || (huart->State == HAL_UART_STATE_BUSY_TX_RX))
+	{
+		huart->Instance->TDR = (uint8_t)(*huart->pTxBuffPtr++ & (uint8_t)0xFF);
+		huart->TxXferCount--;
+
+		if(huart->TxXferCount == 0)
+		{
+			  // Disable the UART Transmit Data Register Empty Interrupt
+			  __HAL_UART_DISABLE_IT(huart, UART_IT_TXE);
+
+			  /* Check if a receive Process is ongoing or not */
+			  if(huart->State == HAL_UART_STATE_BUSY_TX_RX)
+				  huart->State = HAL_UART_STATE_BUSY_RX;
+			  else
+				  huart->State = HAL_UART_STATE_READY;
+
+			  // Wait on TC flag to be able to start a second transfer
+			  if(UART_WaitOnFlagUntilTimeout(huart, UART_FLAG_TC, RESET, HAL_UART_TIMEOUT_VALUE) != HAL_OK)
+				  return;
+
+			  HAL_UART_TxCpltCallback(huart);
+			  return;
+		}
+	}
 }
 
 int FindUartDescFromHandle(UART_HandleTypeDef *UartHandle)
@@ -250,7 +203,6 @@ int FindUartDescFromHandle(UART_HandleTypeDef *UartHandle)
 		}
 	}
 	if(!res) i = -1;
-    
 	return i;
 }
 
@@ -323,14 +275,7 @@ bool CDriverUART::Init(USART_TypeDef *pUsart, UINT BaudRate, UINT WordLength, UI
     uartDesc[m_HandlInd].uartHandle.Init.Mode       = UART_MODE_TX_RX;
 
 	bool res =  HAL_UART_Init(&uartDesc[m_HandlInd].uartHandle) == HAL_OK;
-	 
-    // init term pin
-#if defined(TS337A)
-	
-#elif defined(TU8_APP)
-	InitTermPin();
-#endif
-    
+
     pRxBuffer = new BYTE[BUFFER_SIZE];
     
     if(!pRxBuffer)
@@ -347,8 +292,9 @@ bool CDriverUART::Open()
 	m_bOpen = true;
 	uartDesc[m_HandlInd].uartHandle.ErrorCode = HAL_UART_ERROR_NONE;
     
-	/* Check if a transmit process is ongoing or not */
-    if(uartDesc[m_HandlInd].uartHandle.State == HAL_UART_STATE_BUSY_TX) 
+	// Check if a transmit process is ongoing or not
+
+	if(uartDesc[m_HandlInd].uartHandle.State == HAL_UART_STATE_BUSY_TX)
     {
 		uartDesc[m_HandlInd].uartHandle.State = HAL_UART_STATE_BUSY_TX_RX;
     }
@@ -357,11 +303,12 @@ bool CDriverUART::Open()
 		uartDesc[m_HandlInd].uartHandle.State = HAL_UART_STATE_BUSY_RX;
     }
     
-    /* Enable the UART Parity Error Interrupt */
+    // Enable the UART Parity Error Interrupt
     __HAL_UART_ENABLE_IT(&uartDesc[m_HandlInd].uartHandle, UART_IT_PE);
-    /* Enable the UART Error Interrupt: (Frame error, noise error, overrun error) */
+    // Enable the UART Error Interrupt: (Frame error, noise error, overrun error)
     __HAL_UART_ENABLE_IT(&uartDesc[m_HandlInd].uartHandle, UART_IT_ERR);
 	__HAL_UART_ENABLE_IT(&uartDesc[m_HandlInd].uartHandle, UART_IT_RXNE);
+
     return true;
 }
 
@@ -371,18 +318,6 @@ bool CDriverUART::Close()
 	return true;
 }
 
-void CDriverUART::InitTermPin()
-{
-    
-	__GPIOC_CLK_ENABLE();
-    GPIO_InitTypeDef gpioConf;
-	gpioConf.Pin = GPIO_PIN_7;
-	gpioConf.Mode = GPIO_MODE_OUTPUT_PP;
-	gpioConf.Pull = GPIO_NOPULL;
-	gpioConf.Speed = GPIO_SPEED_HIGH;
-	HAL_GPIO_Init(GPIOC, &gpioConf);
-	
-}
 void CDriverUART::Turn485Tx()
 {
     HAL_GPIO_WritePin(GPIOC,GPIO_PIN_7,GPIO_PIN_SET);
@@ -467,14 +402,6 @@ BYTE CDriverUART::WriteBytes(BYTE *txBuffer,int len)
 	
     if(!uartDesc[m_HandlInd].m_SmphrTx.WaitSemaphoreMs(1000))
 		__NOP();
-
-	///~~~
-	///~~~while(!(uartDesc[m_HandlInd].uartHandle.Instance->SR & USART_SR_TC))
-	///~~~{ osDelay(1);  }
-	
-#if defined(TU8_APP)	
-	Turn485Rx();
-#endif	
 
 	return len;
 }

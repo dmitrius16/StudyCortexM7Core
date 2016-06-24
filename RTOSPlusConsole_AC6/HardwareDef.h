@@ -5,40 +5,46 @@
 #include "stm32f7xx_hal.h"
 
 //########################### UART description #########################
-#define USE_UART4_CONSOLE
-#undef USE_UART4_CONSOLE
-#define USE_USART1_CONSOLE
 
-//#undef USE_USART1_CONSOLE
-//#ifdef USE_UART4_CONSOLE
-
-//#define USARTx                           UART4
-
-#define USART1_CLK_ENABLE()              __UART1_CLK_ENABLE()
+#define USART1_CLK_ENABLE()              __HAL_RCC_USART1_CLK_ENABLE()
 #define USART1_RX_GPIO_CLK_ENABLE()      __GPIOB_CLK_ENABLE()
 #define USART1_TX_GPIO_CLK_ENABLE()      __GPIOA_CLK_ENABLE()
 
-#define USART1_FORCE_RESET()             __UART1_FORCE_RESET()
-#define USART1_RELEASE_RESET()           __UART1_RELEASE_RESET()
+#define USART1_FORCE_RESET()             __HAL_RCC_USART1_FORCE_RESET()
+#define USART1_RELEASE_RESET()           __HAL_RCC_USART1_RELEASE_RESET()
 
 /* Definition for USARTx Pins */
 #define USART1_TX_PIN                    GPIO_PIN_9
 #define USART1_TX_GPIO_PORT              GPIOA
 #define USART1_TX_AF                     GPIO_AF7_USART1
-#define USART1_RX_PIN                    GPIO_PIN_11
-#define USART1_RX_GPIO_PORT              GPIOC
+#define USART1_RX_PIN                    GPIO_PIN_7
+#define USART1_RX_GPIO_PORT              GPIOB
 #define USART1_RX_AF                     GPIO_AF7_USART1
 
 
 /* Definition for USARTx's NVIC */
-//#define USART4_IRQn                      UART4_IRQn
-//#define USART4_IRQHandler                UART4_IRQHandler
+#define UART1_IRQn                      USART1_IRQn
+#define UART1_IRQHandler                USART1_IRQHandler
 //#elif defined (USE_USART1_CONSOLE)
 
+#define USARTx_CLK_ENABLE(UART_HANDLE)  UART_HANDLE##_CLK_ENABLE()
+#define USARTx_RX_GPIO_CLK_ENABLE(UART_HANDLE)  UART_HANDLE##_RX_GPIO_CLK_ENABLE()
+#define USARTx_TX_GPIO_CLK_ENABLE(UART_HANDLE) UART_HANDLE##_TX_GPIO_CLK_ENABLE()
 
-#define USARTx_CLK_ENABLE(UART_HANDLE)  UART_HANDLE ## _CLK_ENABLE()
-#define USARTx_RX_GPIO_CLK_ENABLE(UART_HANDLE)  UART_HANDLE ## _RX_GPIO_CLK_ENABLE()
+#define USARTx_FORCE_RESET(UART_HANDLE) UART_HANDLE##_FORCE_RESET()
+#define USARTx_RELEASE_RESET(UART_HANDLE) UART_HANDLE##_RELEASE_RESET()
 
+
+#define USARTx_TX_PIN(UART_HANDLE) UART_HANDLE##_TX_PIN
+#define USARTx_TX_GPIO_PORT(UART_HANDLE) UART_HANDLE##_TX_GPIO_PORT
+#define USARTx_TX_AF(UART_HANDLE) UART_HANDLE##_TX_AF
+
+#define USARTx_RX_PIN(UART_HANDLE) UART_HANDLE##_RX_PIN
+#define USARTx_RX_GPIO_PORT(UART_HANDLE) UART_HANDLE##_RX_GPIO_PORT
+#define USARTx_RX_AF(UART_HANDLE) UART_HANDLE##_RX_AF
+
+#define USARTx_IRQ(UART_HANDLE) UART_HANDLE##_IRQn
+#define USARTx_IRQHandler(UART_HANDLE) UART_HANDLE##_IRQHandler
 
 
 // ################# End UART peripherial description ####################

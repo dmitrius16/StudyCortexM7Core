@@ -36,22 +36,11 @@
   */ 
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
+#include "StdAfx.h"
+#include "stm32f7xx_hal.h"
 
-/** @addtogroup STM32F7xx_HAL_Examples
-  * @{
-  */
 
-/** @defgroup UART_TwoBoards_ComIT
-  * @{
-  */
-
-/* Private typedef -----------------------------------------------------------*/
-/* Private define ------------------------------------------------------------*/
-/* Private macro -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
-/* Private function prototypes -----------------------------------------------*/
-/* Private functions ---------------------------------------------------------*/
+#define USART_ISR_PRIORITY 10
 
 /** @defgroup HAL_MSP_Private_Functions
   * @{
@@ -70,38 +59,34 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 {  
   GPIO_InitTypeDef  GPIO_InitStruct;
   
-
-
-
-  /*##-1- Enable peripherals and GPIO Clocks #################################*/
   /* Enable GPIO TX/RX clock */
-  USARTx_TX_GPIO_CLK_ENABLE();
-  USARTx_RX_GPIO_CLK_ENABLE();
+  USARTx_TX_GPIO_CLK_ENABLE(USART1);
+  USARTx_RX_GPIO_CLK_ENABLE(USART1);
 
 
   /* Enable USARTx clock */
-  USARTx_CLK_ENABLE(); 
+  USARTx_CLK_ENABLE(USART1);
   
   /*##-2- Configure peripheral GPIO ##########################################*/  
   /* UART TX GPIO pin configuration  */
-  GPIO_InitStruct.Pin       = USARTx_TX_PIN;
+  GPIO_InitStruct.Pin       = USARTx_TX_PIN(USART1);
   GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull      = GPIO_PULLUP;
+  GPIO_InitStruct.Pull      = GPIO_NOPULL;
   GPIO_InitStruct.Speed     = GPIO_SPEED_HIGH;
-  GPIO_InitStruct.Alternate = USARTx_TX_AF;
+  GPIO_InitStruct.Alternate = USARTx_TX_AF(USART1);
 
-  HAL_GPIO_Init(USARTx_TX_GPIO_PORT, &GPIO_InitStruct);
+  HAL_GPIO_Init( USARTx_TX_GPIO_PORT(USART1), &GPIO_InitStruct);
 
   /* UART RX GPIO pin configuration  */
-  GPIO_InitStruct.Pin = USARTx_RX_PIN;
-  GPIO_InitStruct.Alternate = USARTx_RX_AF;
+  GPIO_InitStruct.Pin = USARTx_RX_PIN(USART1);
+  GPIO_InitStruct.Alternate = USARTx_RX_AF(USART1);
 
-  HAL_GPIO_Init(USARTx_RX_GPIO_PORT, &GPIO_InitStruct);
+  HAL_GPIO_Init( USARTx_RX_GPIO_PORT(USART1) , &GPIO_InitStruct);
     
   /*##-3- Configure the NVIC for UART ########################################*/
   /* NVIC for USART */
-  HAL_NVIC_SetPriority(USARTx_IRQn, 0, 1);
-  HAL_NVIC_EnableIRQ(USARTx_IRQn);
+  HAL_NVIC_SetPriority( USARTx_IRQ(USART1) , USART_ISR_PRIORITY , 0);
+  HAL_NVIC_EnableIRQ(USARTx_IRQ(USART1));
 }
 
 /**
@@ -120,12 +105,12 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef *huart)
 
   /*##-2- Disable peripherals and GPIO Clocks #################################*/
   /* Configure UART Tx as alternate function  */
-  HAL_GPIO_DeInit(USARTx_TX_GPIO_PORT, USARTx_TX_PIN);
+  HAL_GPIO_DeInit(USARTx_TX_GPIO_PORT(USART1), USARTx_TX_PIN(USART1));
   /* Configure UART Rx as alternate function  */
-  HAL_GPIO_DeInit(USARTx_RX_GPIO_PORT, USARTx_RX_PIN);
+  HAL_GPIO_DeInit(USARTx_RX_GPIO_PORT(USART1), USARTx_RX_PIN(USART1));
   
   /*##-3- Disable the NVIC for UART ##########################################*/
-  HAL_NVIC_DisableIRQ(USARTx_IRQn);
+  HAL_NVIC_DisableIRQ(USARTx_IRQn(USART1));
 }
 
 /**

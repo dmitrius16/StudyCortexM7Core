@@ -26,7 +26,7 @@ volatile const char* pStrHrdwVers;
 
 void RunProcessManager(void const *argument)
 {
-	pStrHrdwVers = GetHardwareVersion();// fictive calls
+	pStrHrdwVers = GetHardwareVersion();	// fictive calls
 
 	AddProcess(&g_Console,osThread(Console));
 	g_Console.OnInitProcess((void*)1);
